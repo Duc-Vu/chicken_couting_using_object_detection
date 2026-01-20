@@ -41,7 +41,6 @@ def generate_negative_patches(
     output_dir,
     patch_size=64,
     samples_per_image=35,
-    var_thresh=15,
     seed=50,
 ):
     random.seed(seed)
@@ -80,3 +79,5 @@ def generate_negative_patches(
             cv2.imwrite(out_path, patch)
             print(f"Negative Crop {neg_id}")
             neg_id += 1
+            
+    return neg_id

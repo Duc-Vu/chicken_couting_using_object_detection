@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     build_split(
         coco_path="data/raw/train/coco.json",
-        image_dir="data/raw/train/images",
+        image_dir="data/raw/train",
         out_pos_dir="data/processed/train/positive",
         out_neg_dir="data/processed/train/negative",
         split_name="train",
@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     build_split(
         coco_path="data/raw/test/coco.json",
-        image_dir="data/raw/test/images",
+        image_dir="data/raw/test",
         out_pos_dir="data/processed/test/positive",
         out_neg_dir="data/processed/test/negative",
         split_name="test",
