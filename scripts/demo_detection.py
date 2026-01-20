@@ -1,0 +1,37 @@
+import cv2
+import joblib
+from src.features.hog import extract_hog
+from src.inference.sliding_window import run_svm_inference
+from src.visualize.detections import draw_detections
+
+
+WINDOW_SIZE = 64
+STEP = 16
+THRESHOLD = 0.0
+
+
+if __name__ == "__main__":
+    svm = joblib.load("models/svm_chicken.pkl")
+
+    img = cv2.imread(
+        "data/raw/train/images/before_mp4-12_jpg.rf.682b991d442b0eaecff606bbfd3211c7.jpg"
+    )
+
+    detections = run_svm_inference(
+        img=img,
+        svm=svm,
+        feature_extractor=extract_hog,
+        window_size=WINDOW_SIZE,
+        step=STEP,
+        threshold=THRESHOLD,
+    )
+
+    vis = draw_detections(
+        img,
+        detections,
+        WINDOW_SIZE,
+    )
+
+    cv2.imshow("detections", vis)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
