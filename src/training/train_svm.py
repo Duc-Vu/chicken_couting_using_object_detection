@@ -1,6 +1,14 @@
 import glob
 import cv2
 import numpy as np
+import os
+
+def glob_images(dir_path):
+    exts = ("*.png", "*.jpg", "*.jpeg")
+    paths = []
+    for ext in exts:
+        paths.extend(glob.glob(os.path.join(dir_path, ext))) 
+    return paths
 
 
 def load_features(img_paths, feature_extractor, label):
@@ -25,13 +33,13 @@ def train_svm_classifier(
 ):
     X, y = [], []
 
-    pos_paths = glob.glob(f"{pos_dir}/*.png")
+    pos_paths = glob_images(pos_dir)
     Xp, yp = load_features(pos_paths, feature_extractor, 1)
     X.extend(Xp)
     y.extend(yp)
 
     for neg_dir in neg_dirs:
-        neg_paths = glob.glob(f"{neg_dir}/*.png")
+        neg_paths = glob_images(neg_dir)
         Xn, yn = load_features(neg_paths, feature_extractor, 0)
         X.extend(Xn)
         y.extend(yn)

@@ -1,11 +1,13 @@
 import os
 import joblib
+import glob
 
 from src.features.hog import extract_hog
 from src.models.svm import build_svm
 from src.training.train_svm import train_svm_classifier, load_features
 from src.evaluation.classification import evaluate_classifier
 from src.utils.logger import setup_file_logger
+
 
 
 TRAIN_POS = "data/processed/train/positive"
@@ -17,6 +19,12 @@ TRAIN_NEG = [
 TEST_POS = "data/processed/test/positive"
 TEST_NEG = "data/processed/test/negative"
 
+def glob_images(dir_path):
+    exts = ("*.png", "*.jpg", "*.jpeg")
+    paths = []
+    for ext in exts:
+        paths.extend(glob.glob(os.path.join(dir_path, ext)))
+    return paths
 
 if __name__ == "__main__":
     logger, log_path = setup_file_logger(
@@ -56,8 +64,8 @@ if __name__ == "__main__":
     # ===== TEST =====
     X_test, y_test = [], []
 
-    Xp, yp = load_features(f"{TEST_POS}/*.png", extract_hog, 1)
-    Xn, yn = load_features(f"{TEST_NEG}/*.png", extract_hog, 0)
+    Xp, yp = load_features(glob_images(TEST_POS), extract_hog, 1)
+    Xn, yn = load_features(glob_images(TEST_NEG), extract_hog, 0)
 
     X_test.extend(Xp)
     y_test.extend(yp)

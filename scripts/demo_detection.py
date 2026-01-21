@@ -14,7 +14,7 @@ if __name__ == "__main__":
     svm = joblib.load("models/svm_chicken.pkl")
 
     img = cv2.imread(
-        "data/raw/train/images/before_mp4-12_jpg.rf.682b991d442b0eaecff606bbfd3211c7.jpg"
+        "data/raw/test/bc688d39308b1adc_jpg.rf.42422b119647f1764392fbecb5934e71.jpg"
     )
 
     detections = run_svm_inference(
