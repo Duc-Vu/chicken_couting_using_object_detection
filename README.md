@@ -29,7 +29,7 @@ pip install -r requirements.txt
 This project uses **DVC** to manage large datasets.
 
 ```bash
-pip install dvc[gdrive]
+pip install dvc[s3]
 ```
 
 Check installation:

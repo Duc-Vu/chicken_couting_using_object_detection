@@ -1,4 +1,5 @@
 [core]
     remote = storage
 ['remote "storage"']
-    url = gdrive://1KuGmFUCSyqajzpgYwMO3BuQta7qrts9t
+    url = s3://chickendataset
+    endpointurl = https://eb442d6f163e931b73199afa29401ab9.r2.cloudflarestorage.com
