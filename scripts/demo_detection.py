@@ -1,8 +1,8 @@
 import cv2
 import joblib
-from src.features.hog import extract_hog
-from src.inference.sliding_window import run_svm_inference
-from src.visualize.detections import draw_detections
+from src.svm_detector.features.hog import extract_hog
+from src.svm_detector.inference.sliding_window import run_svm_inference
+from svm_detector.visualize import draw_detections
 
 
 WINDOW_SIZE = 64

@@ -5,7 +5,7 @@ import glob
 from src.features.hog import extract_hog
 from src.models.svm import build_svm
 from src.training.train_svm import train_svm_classifier, load_features
-from src.evaluation.classification import evaluate_classifier
+from svm_detector.evaluate import evaluate_classifier
 from src.utils.logger import setup_file_logger
 
 
