@@ -1,8 +1,8 @@
 import os
 from math import ceil
 
-from src.dataset.negative_sampling import generate_negative_patches
-from src.dataset.positive_sampling import generate_positive_patches
+from src.dataset.negative_sampling import generate_negative
+from src.dataset.positive_sampling import generate_positive
 
 
 NEG_RATIO = 3
@@ -16,24 +16,25 @@ def count_images(image_dir):
 
 
 def build_split(
-    coco_path,
     image_dir,
+    label_dir,
     out_pos_dir,
     out_neg_dir,
     split_name,
 ):
     print(f"\n===== BUILD {split_name.upper()} =====")
 
-    num_pos = generate_positive_patches(
-        coco_path=coco_path,
+    # ---- POSITIVE ----
+    num_pos = generate_positive(
         image_dir=image_dir,
+        label_dir=label_dir,
         output_dir=out_pos_dir,
     )
 
     num_imgs = count_images(image_dir)
 
     samples_per_image = ceil(
-        NEG_RATIO * num_pos / num_imgs
+        NEG_RATIO * num_pos / max(num_imgs, 1)
     )
 
     print(f"{split_name}:")
@@ -41,31 +42,34 @@ def build_split(
     print(f"  positives = {num_pos}")
     print(f"  samples_per_image (neg) = {samples_per_image}")
 
-    num_neg = generate_negative_patches(
-        coco_path=coco_path,
+    # ---- NEGATIVE ----
+    num_neg = generate_negative(
         image_dir=image_dir,
+        label_dir=label_dir,
         output_dir=out_neg_dir,
         samples_per_image=samples_per_image,
     )
-
+    print(f"{split_name}:")
+    print(f"  images = {num_imgs}")
+    print(f"  positives = {num_pos}")
+    print(f"  samples_per_image (neg) = {samples_per_image}")
     print(f"  negatives = {num_neg}")
-    print(f"  ratio neg/pos ≈ {num_neg / num_pos:.2f}")
-
+    print(f"  ratio neg/pos ≈ {num_neg / max(num_pos, 1):.2f}")
 
 if __name__ == "__main__":
 
     build_split(
-        coco_path="data/raw/train/coco.json",
-        image_dir="data/raw/train",
-        out_pos_dir="data/processed/train/positive",
-        out_neg_dir="data/processed/train/negative",
+        image_dir="dataset/yolo/train/images",
+        label_dir="dataset/yolo/train/labels",
+        out_pos_dir="dataset/svm/train/positive",
+        out_neg_dir="dataset/svm/train/negative",
         split_name="train",
     )
 
     build_split(
-        coco_path="data/raw/test/coco.json",
-        image_dir="data/raw/test",
-        out_pos_dir="data/processed/test/positive",
-        out_neg_dir="data/processed/test/negative",
-        split_name="test",
+        image_dir="dataset/yolo/test/images",
+        label_dir="dataset/yolo/test/labels",
+        out_pos_dir="dataset/svm/valid/positive",
+        out_neg_dir="dataset/svm/valid/negative",
+        split_name="valid",
     )

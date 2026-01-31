@@ -8,17 +8,16 @@ from src.inference.nms import nms
 # ========== CONFIG ==========
 BASE_WINDOW = 64          
 STEP = 16
-SCORE_THRESH = 0.7     
+SCORE_THRESH = 0.3     
 IOU_THRESH = 0.3
 
 SCALE = 0.5              
-VIDEO_PATH = "data/test/test_chicken.mp4"
-MODEL_PATH = "models/svm_chicken.pkl"
+VIDEO_PATH = "dataset/test_video/test_chicken.mp4"
+MODEL_PATH = "models/svm/svm_chicken_v1.3_hneg.pkl"
+SAVE_NEGATIVE_PATH = "dataset/svm/train/hard_negative"
 
 SEEK_STEP = 30
 FPS_SCALE = 1.0
-
-
 # ========== LOAD ==========
 svm = joblib.load(MODEL_PATH)
 cap = cv2.VideoCapture(VIDEO_PATH)
@@ -51,6 +50,7 @@ def detect_chickens(frame):
 
 
 # ========== MAIN LOOP ==========
+hneg_id = 0
 while cap.isOpened():
     if not paused:
         ret, frame = cap.read()
@@ -96,20 +96,39 @@ while cap.isOpened():
 
     elif key == ord(' '):
         paused = not paused
+        state = "PAUSED" if paused else "UNPAUSED"
+        print(state)
 
     elif key == ord('d'):
         cur = cap.get(cv2.CAP_PROP_POS_FRAMES)
         cap.set(cv2.CAP_PROP_POS_FRAMES, cur + SEEK_STEP)
+        print(f"SKIP {SEEK_STEP}")
 
     elif key == ord('a'):
         cur = cap.get(cv2.CAP_PROP_POS_FRAMES)
         cap.set(cv2.CAP_PROP_POS_FRAMES, max(0, cur - SEEK_STEP))
+        print(f"BACK {SEEK_STEP}")
 
     elif key == ord('w'):
         FPS_SCALE = min(4.0, FPS_SCALE * 2)
 
     elif key == ord('s'):
         FPS_SCALE = max(0.25, FPS_SCALE / 2)
+        
+    elif key == ord('h'):
+        last_boxes = final_boxes
+        last_frame = frame.copy()
+        for (x1, y1, x2, y2) in last_boxes:
+            patch = last_frame[y1:y2, x1:x2]
+            patch = cv2.resize(patch, (64, 64))
+
+            cv2.imwrite(
+                f"{SAVE_NEGATIVE_PATH}/hneg_{hneg_id}.png",
+                patch
+            )
+            hneg_id += 1
+
+        print("Saved hard negatives")
 
 
 cap.release()

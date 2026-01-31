@@ -1,6 +1,6 @@
 # Chicken Counting Using Object Detection
 
-This project focuses on **chicken counting** from images using object detection techniques.  
+This project focuses on **chicken counting** from images using object detection techniques.
 A **pure SVM-based approach** is implemented first, then compared with **YOLO**.
 
 ---
@@ -14,17 +14,16 @@ cd chicken_couting_using_object_detection
 
 ---
 
-## 2. Install Python Dependencies
-
-Install required Python libraries:
+## 2. Install Python Envirovment
 
 ```bash
-pip install -r requirements.txt
+conda env create -f environment.yml
+conda activate chicken_counting
 ```
 
 ---
 
-## 3. Install DVC (Google Drive Support)
+## 3. Install DVC
 
 This project uses **DVC** to manage large datasets.
 
@@ -49,3 +48,7 @@ dvc pull
 ```
 
 After this step, the `data/` directory will be downloaded automatically.
+
+## 5. About Dataset
+
+https://universe.roboflow.com/uit-6vkfy/chicken-j6niq/dataset/6

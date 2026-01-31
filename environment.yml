@@ -1,0 +1,17 @@
+name: chicken_counting
+channels:
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - opencv
+  - joblib
+  - numpy[version='<2']
+  - scikit-learn
+  - ultralytics
+  - scikit-image
+  - torchaudio
+  - pytorch-cuda=11.8
+  - pytorch
+  - torchvision

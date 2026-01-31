@@ -13,7 +13,7 @@ def setup_file_logger(log_dir="logs", name="experiment"):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    logger.handlers.clear()   # tránh log trùng
+    logger.handlers.clear() 
     logger.propagate = False
 
     formatter = logging.Formatter(

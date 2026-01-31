@@ -3,7 +3,7 @@ import joblib
 import glob
 
 from src.features.hog import extract_hog
-from src.models.svm import build_svm
+from src.models.svm import build_sgd
 from src.training.train_svm import train_svm_classifier, load_features
 from src.evaluation.classification import evaluate_classifier
 from src.utils.logger import setup_file_logger
@@ -19,8 +19,8 @@ TRAIN_NEG = [
 VALID_POS = "dataset/svm/valid/positive"
 VALID_NEG = "dataset/svm/valid/negative"
 LOG_PATH = "logs/svm"
-VERSION = 1.3
-SUB_VER = "hneg"
+VERSION = 1.1
+SUB_VER = "sgd"
 
 def glob_images(dir_path):
     exts = ("*.png", "*.jpg", "*.jpeg")
@@ -38,16 +38,16 @@ if __name__ == "__main__":
     logger.info("===== EXPERIMENT START =====")
 
     # ===== CONFIG =====
-    C = 0.01
-    MAX_ITER = 10000
+    ALPHA = 1e-4
+    MAX_ITER = 2000
 
     logger.info("Config:")
-    logger.info(f"  Model: LinearSVC")
-    logger.info(f"  Feature: HOG")
-    logger.info(f"  C={C}, max_iter={MAX_ITER}")
+    logger.info("  Model: SGDClassifier (hinge / linear SVM)")
+    logger.info("  Feature: HOG")
+    logger.info(f"  alpha={ALPHA}, max_iter={MAX_ITER}")
 
     # ===== TRAIN =====
-    svm = build_svm(C=C, max_iter=MAX_ITER)
+    svm = build_sgd(alpha=ALPHA, max_iter=MAX_ITER)
 
     svm, X_train, y_train = train_svm_classifier(
         pos_dir=TRAIN_POS,

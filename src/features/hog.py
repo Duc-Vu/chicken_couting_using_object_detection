@@ -3,12 +3,14 @@ import cv2
 
 def extract_hog(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    feat = hog(
-        gray,
-        orientations=9,
-        pixels_per_cell=(8, 8),
-        cells_per_block=(2, 2),
-        block_norm="L2-Hys"
+    hog = cv2.HOGDescriptor(
+    _winSize=(64, 64),
+    _blockSize=(16, 16),
+    _blockStride=(8, 8),
+    _cellSize=(8, 8),
+    _nbins=9
     )
+
+    feat = hog.compute(gray)
     return feat
 
