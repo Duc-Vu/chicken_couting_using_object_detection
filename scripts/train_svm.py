@@ -2,12 +2,12 @@ import os
 import joblib
 import glob
 
-from src.features.hog import extract_hog
-from src.models.svm import build_svm
-from src.training.train_svm import train_svm_classifier, load_features
-from svm_detector.evaluate import evaluate_classifier
-from src.utils.logger import setup_file_logger
-
+from src.svm_detector.features.hog import extract_hog
+from src.svm_detector.model.svm import build_svm
+from src.svm_detector.training.train import train_svm_classifier, load_features
+from src.svm_detector.evaluate import evaluate_classifier
+from src.svm_detector.utils.logger import setup_file_logger
+from config import config
 
 
 TRAIN_POS = "dataset/svm/train/positive"
@@ -19,8 +19,8 @@ TRAIN_NEG = [
 VALID_POS = "dataset/svm/valid/positive"
 VALID_NEG = "dataset/svm/valid/negative"
 LOG_PATH = "logs/svm"
-VERSION = 1.3
-SUB_VER = "hneg"
+VERSION = 1.5
+SUB_VER = "base"
 
 def glob_images(dir_path):
     exts = ("*.png", "*.jpg", "*.jpeg")

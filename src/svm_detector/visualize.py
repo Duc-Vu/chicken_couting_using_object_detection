@@ -4,25 +4,27 @@ import cv2
 def draw_detections(
     img,
     detections,
-    window_size,
     color=(0, 0, 255),
 ):
     vis = img.copy()
 
-    for x, y, score in detections:
+    for det in detections:
+        x1, y1, x2, y2 = det[:4]
+        x1, y1, x2, y2 = map(int, [x1, y1, x2, y2])
+        score = det[4]
         cv2.rectangle(
             vis,
-            (x, y),
-            (x + window_size, y + window_size),
+            (x1, y1),
+            (x2, y2),
             color,
-            1,
+            2,
         )
         cv2.putText(
             vis,
             f"{score:.2f}",
-            (x, y - 2),
+            (x1, y1 - 4),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.3,
+            0.4,
             (0, 255, 0),
             1,
         )

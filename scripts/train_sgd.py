@@ -2,11 +2,11 @@ import os
 import joblib
 import glob
 
-from src.features.hog import extract_hog
-from src.models.svm import build_sgd
-from src.training.train_svm import train_svm_classifier, load_features
-from svm_detector.evaluate import evaluate_classifier
-from src.utils.logger import setup_file_logger
+from src.svm_detector.features.hog import extract_hog
+from src.svm_detector.model.svm import build_sgd
+from src.svm_detector.training.train import train_svm_classifier, load_features
+from src.svm_detector.evaluate import evaluate_classifier
+from src.svm_detector.utils.logger import setup_file_logger
 
 
 

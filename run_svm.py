@@ -1,19 +1,20 @@
 import cv2
 import joblib
 
-from src.features.hog import extract_hog
-from src.inference.nms import nms
+from src.svm_detector.features.hog import extract_hog
+from src.svm_detector.inference.nms import nms
+import numpy as np
+from config import config
 
-
-# ========== CONFIG ==========
-BASE_WINDOW = 64          
+# ========== CONFIG ==========     
+BASE_WINDOW = config.WIN_SIZE  
 STEP = 16
-SCORE_THRESH = 0.3     
+SCORE_THRESH = 0.7     
 IOU_THRESH = 0.3
 
 SCALE = 0.5              
 VIDEO_PATH = "dataset/test_video/test_chicken.mp4"
-MODEL_PATH = "models/svm/svm_chicken_v1.3_hneg.pkl"
+MODEL_PATH = "models/svm/svm_chicken_v1.4_base.pkl"
 SAVE_NEGATIVE_PATH = "dataset/svm/train/hard_negative"
 
 SEEK_STEP = 30
@@ -29,27 +30,32 @@ def detect_chickens(frame):
     H, W = frame.shape[:2]
     boxes, scores = [], []
 
-    for y in range(0, H - BASE_WINDOW, STEP):
-        for x in range(0, W - BASE_WINDOW, STEP):
+    win_w, win_h = BASE_WINDOW
 
-            # crop trên frame đã resize
-            patch = frame[y:y + BASE_WINDOW, x:x + BASE_WINDOW]
+    for y in range(0, H - win_h, STEP):
+        for x in range(0, W - win_w, STEP):
 
-            # 🚨 luôn resize patch về đúng size train
-            patch = cv2.resize(patch, (BASE_WINDOW, BASE_WINDOW))
+            patch = frame[y:y + win_h, x:x + win_w]
+
+            if patch.shape[0] != win_h or patch.shape[1] != win_w:
+                continue
 
             feat = extract_hog(patch).reshape(1, -1)
             score = svm.decision_function(feat)[0]
 
             if score > SCORE_THRESH:
-                boxes.append([x, y, x + BASE_WINDOW, y + BASE_WINDOW])
+                boxes.append([x, y, x + win_w, y + win_h])
                 scores.append(score)
+
+    if len(boxes) == 0:
+        return []
 
     keep = nms(boxes, scores, iou_thresh=IOU_THRESH)
     return [boxes[i] for i in keep]
 
 
 # ========== MAIN LOOP ==========
+
 hneg_id = 0
 while cap.isOpened():
     if not paused:
@@ -120,7 +126,7 @@ while cap.isOpened():
         last_frame = frame.copy()
         for (x1, y1, x2, y2) in last_boxes:
             patch = last_frame[y1:y2, x1:x2]
-            patch = cv2.resize(patch, (64, 64))
+            patch = cv2.resize(patch, BASE_WINDOW)
 
             cv2.imwrite(
                 f"{SAVE_NEGATIVE_PATH}/hneg_{hneg_id}.png",

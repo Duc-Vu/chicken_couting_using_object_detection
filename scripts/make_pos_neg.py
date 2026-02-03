@@ -1,9 +1,9 @@
 import os
 from math import ceil
 
-from src.dataset.negative_sampling import generate_negative
-from src.dataset.positive_sampling import generate_positive
-
+from src.svm_detector.dataset.negative_sampling import generate_negative
+from src.svm_detector.dataset.positive_sampling import generate_positive
+from config import config
 
 NEG_RATIO = 3
 
@@ -29,6 +29,7 @@ def build_split(
         image_dir=image_dir,
         label_dir=label_dir,
         output_dir=out_pos_dir,
+        out_size=config.WIN_SIZE
     )
 
     num_imgs = count_images(image_dir)
@@ -48,6 +49,7 @@ def build_split(
         label_dir=label_dir,
         output_dir=out_neg_dir,
         samples_per_image=samples_per_image,
+        patch_size=config.WIN_SIZE
     )
     print(f"{split_name}:")
     print(f"  images = {num_imgs}")
