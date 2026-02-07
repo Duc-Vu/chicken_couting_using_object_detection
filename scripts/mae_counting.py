@@ -14,7 +14,7 @@ from config import config
 # ---------------- CONFIG ----------------
 WINDOW_SIZE = config.WIN_SIZE
 STEP = 16
-THRESHOLD = 0.2
+THRESHOLD = 0.5
 IS_NMS = True
 
 IMAGE_DIR = "dataset/yolo/test/images"

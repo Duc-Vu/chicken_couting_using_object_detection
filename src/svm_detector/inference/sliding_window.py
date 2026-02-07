@@ -14,7 +14,7 @@ def run_svm_inference(
     img,
     svm,
     feature_extractor,
-    window_size=(64, 128),   # (W, H) cho gà
+    window_size=(64, 128),  
     step=16,
     threshold=0.0,
     nms_thresh=0.4
@@ -24,7 +24,6 @@ def run_svm_inference(
     W, H = window_size
 
     for x, y, patch in sliding_window(img, window_size, step):
-        # bảo vệ: patch phải đúng size
         if patch.shape[1] != W or patch.shape[0] != H:
             continue
 
